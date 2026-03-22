@@ -1,0 +1,100 @@
+-- [[ HUB DE RÁDIO COM MINIMIZAR ]] --
+
+local Player = game.Players.LocalPlayer
+local PlayerGui = Player:WaitForChild("PlayerGui")
+
+-- 1. Interface Principal
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "RadioHubV2"
+ScreenGui.Parent = PlayerGui
+ScreenGui.ResetOnSpawn = false
+
+-- 2. Frame Principal (O Painel)
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 250, 0, 150)
+MainFrame.Position = UDim2.new(0.5, -125, 0.5, -75)
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.BorderSizePixel = 0
+MainFrame.Active = true
+MainFrame.Draggable = true -- Pode arrastar
+MainFrame.Parent = ScreenGui
+
+local Corner = Instance.new("UICorner")
+Corner.Parent = MainFrame
+
+-- 3. Botão de Minimizar (O "-")
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Size = UDim2.new(0, 30, 0, 30)
+MinimizeBtn.Position = UDim2.new(1, -35, 0, 5)
+MinimizeBtn.Text = "-"
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeBtn.Font = Enum.Font.GothamBold
+MinimizeBtn.TextSize = 20
+MinimizeBtn.Parent = MainFrame
+
+local MinCorner = Instance.new("UICorner")
+MinCorner.CornerRadius = ToolCornerRadius.new(0, 8)
+MinCorner.Parent = MinimizeBtn
+
+-- 4. Botão de Abrir (Aparece quando o hub some)
+local OpenBtn = Instance.new("TextButton")
+OpenBtn.Size = UDim2.new(0, 50, 0, 50)
+OpenBtn.Position = UDim2.new(0, 10, 0.5, -25) -- Fica no canto esquerdo da tela
+OpenBtn.Text = "📻"
+OpenBtn.Visible = false -- Começa invisível
+OpenBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+OpenBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+OpenBtn.TextSize = 25
+OpenBtn.Parent = ScreenGui
+
+local OpenCorner = Instance.new("UICorner")
+OpenCorner.Parent = OpenBtn
+
+-- 5. Outros elementos (Título, Input e Play)
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, -40, 0, 40)
+Title.Text = "RADIO HUB"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.BackgroundTransparency = 1
+Title.Font = Enum.Font.GothamBold
+Title.Parent = MainFrame
+
+local TextBox = Instance.new("TextBox")
+TextBox.Size = UDim2.new(0.8, 0, 0, 35)
+TextBox.Position = UDim2.new(0.1, 0, 0.35, 0)
+TextBox.PlaceholderText = "ID da Música..."
+TextBox.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.Parent = MainFrame
+
+local PlayButton = Instance.new("TextButton")
+PlayButton.Size = UDim2.new(0.8, 0, 0, 35)
+PlayButton.Position = UDim2.new(0.1, 0, 0.65, 0)
+PlayButton.Text = "PLAY"
+PlayButton.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+PlayButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayButton.Parent = MainFrame
+Instance.new("UICorner").Parent = PlayButton
+
+-- 6. Lógica de Som
+local Sound = Instance.new("Sound")
+Sound.Parent = Player.Character:WaitForChild("HumanoidRootPart")
+
+-- 7. Funções de Clique
+PlayButton.MouseButton1Click:Connect(function()
+    Sound:Stop()
+    Sound.SoundId = "rbxassetid://" .. TextBox.Text
+    Sound:Play()
+end)
+
+-- Lógica de Minimizar/Abrir
+MinimizeBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = false
+    OpenBtn.Visible = true
+end)
+
+OpenBtn.MouseButton1Click:Connect(function()
+    MainFrame.Visible = true
+    OpenBtn.Visible = false
+end)
